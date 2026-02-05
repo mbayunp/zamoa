@@ -3,21 +3,26 @@
 @tailwind utilities;
 
 @layer base {
-  /* Menghilangkan margin/padding default browser */
-  html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    min-height: 100vh;
-    background-color: rgb(249 250 251); /* gray-50 */
+  :root {
+    /* Warna Navy Pekat sesuai identitas profesional */
+    --zamoa-navy: #0A0A44;   
+    --zamoa-green: #006B3F;  
+    --zamoa-orange: #F15A24; 
+    --zamoa-yellow: #FBB03B; 
   }
 
-  /* RESET PENTING: Memastikan container root Vite memenuhi layar */
-  #root {
-    width: 100%;
-    max-width: none; /* Menghapus max-width 1280px bawaan Vite */
-    margin: 0;
-    padding: 0;
-    text-align: left; /* Mengembalikan posisi teks ke kiri */
+  html, body, #root {
+    background-color: #ffffff;
+    color: var(--zamoa-navy);
+  }
+}
+
+@layer components {
+  /* Badge Legal dengan warna Navy */
+  .badge-legal {
+    background-color: var(--zamoa-navy);
+    color: var(--zamoa-yellow);
+    border: 1px solid rgba(251, 176, 59, 0.3);
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold;
   }
 }

@@ -1,39 +1,70 @@
-import { Link } from 'react-router-dom';
-import { Menu, User } from 'lucide-react'; // Menggunakan icon dari library lucide
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, User } from 'lucide-react';
+// Import logo dari assets
+import logoZamoa from '../assets/images/Yayasan Zamoa.jpg';
 
 const Navbar = () => {
+  const location = useLocation();
+  const isActive = (path) => location.pathname === path;
+
   return (
-    <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        {/* Logo Section */}
-        <Link to="/" className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
-            YB
+    <nav className="bg-white border-b border-gray-100 sticky top-0 z-50 w-full shadow-sm">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-8 py-2 flex justify-between items-center">
+        
+        {/* Logo Section Menggunakan Image Assets */}
+        <Link to="/" className="flex items-center gap-3 group">
+          <img 
+            src={logoZamoa} 
+            alt="Logo Yayasan Zamoa" 
+            className="w-12 h-12 object-contain group-hover:scale-105 transition-transform"
+          />
+          <div className="flex flex-col">
+            <span className="text-lg font-black text-zamoa-dark leading-none uppercase">
+              Zamoa
+            </span>
+            <span className="text-[10px] font-bold text-zamoa-green tracking-[0.15em] uppercase">
+              Peduli Bangsa
+            </span>
           </div>
-          <span className="text-xl font-bold text-gray-800 tracking-tight">
-            Yayasan Berdaya
-          </span>
         </Link>
 
-        {/* Menu Desktop */}
-        <div className="hidden md:flex items-center gap-8 text-gray-600 font-medium">
-          <Link to="/" className="hover:text-blue-600 transition">Home</Link>
-          <Link to="/struktur" className="hover:text-blue-600 transition">Struktur</Link>
-          <Link to="/bidang" className="hover:text-blue-600 transition">Bidang</Link>
-          <Link to="/berita" className="hover:text-blue-600 transition">Berita</Link>
+        {/* Menu Desktop dengan warna tema baru */}
+        <div className="hidden lg:flex items-center gap-2 text-slate-600 font-semibold">
+          <Link 
+            to="/" 
+            className={`px-4 py-2 rounded-lg transition-colors hover:text-zamoa-orange ${isActive('/') ? 'text-zamoa-green bg-green-50' : ''}`}
+          >
+            Home
+          </Link>
           
           <Link 
-            to="/admin/dashboard" 
-            className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-full text-sm hover:bg-blue-600 hover:text-white transition"
+            to="/tentang" 
+            className={`px-4 py-2 rounded-lg transition-colors hover:text-zamoa-orange ${isActive('/tentang') ? 'text-zamoa-green bg-green-50' : ''}`}
           >
-            <User size={18} />
-            Admin
+            Tentang Kami
+          </Link>
+
+          <Link 
+            to="/struktur" 
+            className={`px-4 py-2 rounded-lg transition-colors hover:text-zamoa-orange ${isActive('/struktur') ? 'text-zamoa-green bg-green-50' : ''}`}
+          >
+            Struktur
+          </Link>
+
+          <div className="h-6 w-[1px] bg-gray-200 mx-4"></div>
+
+          <Link 
+            to="/admin/login" 
+            className="flex items-center gap-2 bg-zamoa-dark text-black px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-zamoa-green transition-all shadow-md"
+          >
+            <User size={16} />
+            Portal Admin
           </Link>
         </div>
 
-        {/* Mobile Menu Icon */}
-        <button className="md:hidden text-gray-600">
-          <Menu size={28} />
+        {/* Mobile Menu */}
+        <button className="lg:hidden p-2 text-zamoa-dark">
+          <Menu size={24} />
         </button>
       </div>
     </nav>
