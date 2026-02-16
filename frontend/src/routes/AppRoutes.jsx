@@ -1,7 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
-import Home from '../pages/Home.jsx';        // Tambahkan .jsx
-import Struktur from '../pages/Struktur.jsx'; // Tambahkan .jsx
+import Home from '../pages/Home.jsx';
+import Struktur from '../pages/Struktur.jsx';
 import Tentang from '../pages/Tentang.jsx';
+import Program from '../pages/Program.jsx';
 
 const AppRoutes = () => {
   return (
@@ -9,6 +10,7 @@ const AppRoutes = () => {
       <Route path="/" element={<Home />} />
       <Route path="/struktur" element={<Struktur />} />
       <Route path="/tentang" element={<Tentang />} />
+      <Route path="/program" element={<Program />} /> 
     </Routes>
   );
 };
