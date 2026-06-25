@@ -7,10 +7,11 @@ export default {
   theme: {
     extend: {
       colors: {
+        'zamoa-navy': '#0A0A44',
+        'zamoa-dark': '#0A0A44',
         'zamoa-green': '#006B3F',
         'zamoa-orange': '#F15A24',
         'zamoa-yellow': '#FBB03B',
-        'zamoa-dark': '#1B1464',
       }
     },
   },

@@ -6,7 +6,7 @@ import logoZamoa from '../assets/images/Yayasan Zamoa.jpg';
 
 const Footer = () => {
   return (
-    <footer className="bg-[#1B1464] text-white pt-20 pb-10 relative overflow-hidden">
+    <footer className="bg-[#0A0A44] text-white pt-20 pb-10 relative overflow-hidden">
       
       {/* --- DECORATIVE TOP BORDER --- */}
       <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#FBB03B] via-[#F15A24] to-[#006B3F]"></div>

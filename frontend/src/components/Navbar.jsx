@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, User, Heart, LayoutDashboard, HandHeart } from 'lucide-react';
-import axios from 'axios';
+import { mockCheckAuth } from '../data/mockData';
 import logoZamoa from '../assets/images/Yayasan Zamoa.jpg';
 
 const Navbar = () => {
@@ -18,10 +18,7 @@ const Navbar = () => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/auth/me', {
-          withCredentials: true
-        });
-        
+        const response = await mockCheckAuth();
         if (response.status === 200) {
           setIsAdminLoggedIn(true);
         }
@@ -31,19 +28,17 @@ const Navbar = () => {
     };
 
     checkAuthStatus();
-  }, []);
+  }, [location]); // re-run auth check on location changes to keep Navbar state synced!
 
-  // Daftar Menu (Tambahkan Donasi di sini)
   const navLinks = [
     { name: 'Beranda', path: '/' },
     { name: 'Tentang Kami', path: '/tentang' },
     { name: 'Program', path: '/program' },
     { name: 'Struktur', path: '/struktur' },
-    // Menu Donasi ditambahkan di bawah, tapi kita akan pisahkan render-nya agar style-nya beda
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all duration-300">
+    <nav className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all duration-300">
       <div className="max-w-[1440px] mx-auto px-4 md:px-8 h-20 flex justify-between items-center">
         
         {/* --- LOGO SECTION --- */}
@@ -51,10 +46,10 @@ const Navbar = () => {
           <img 
             src={logoZamoa} 
             alt="Logo Yayasan Zamoa" 
-            className="w-12 h-12 object-contain group-hover:scale-105 transition-transform duration-300"
+            className="w-12 h-12 object-contain group-hover:scale-105 transition-transform duration-300 rounded-xl"
           />
           <div className="flex flex-col">
-            <span className="text-xl font-black text-[#1B1464] leading-none uppercase tracking-tight">
+            <span className="text-xl font-black text-[#0A0A44] leading-none uppercase tracking-tight group-hover:text-[#006B3F] transition-colors">
               Zamoa
             </span>
             <span className="text-[10px] font-bold text-[#006B3F] tracking-[0.2em] uppercase mt-0.5">
@@ -72,13 +67,13 @@ const Navbar = () => {
               to={link.path} 
               className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 relative group
                 ${isActive(link.path) 
-                  ? 'text-[#006B3F] bg-green-50' 
-                  : 'text-slate-600 hover:text-[#006B3F] hover:bg-green-50/50'
+                  ? 'text-[#006B3F] bg-green-50/80' 
+                  : 'text-slate-600 hover:text-[#006B3F] hover:bg-green-50/40'
                 }`}
             >
               {link.name}
               {isActive(link.path) && (
-                <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-[#006B3F] rounded-full"></span>
+                <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#006B3F] rounded-full"></span>
               )}
             </Link>
           ))}
@@ -86,10 +81,10 @@ const Navbar = () => {
           {/* Tombol Donasi Khusus (Desktop) */}
           <Link 
             to="/donasi"
-            className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 ml-2 border-2
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ml-2 border-2 transform hover:-translate-y-0.5 shadow-sm
               ${isActive('/donasi')
                 ? 'bg-[#F15A24] text-white border-[#F15A24] shadow-md shadow-orange-200'
-                : 'bg-white text-[#F15A24] border-[#F15A24] hover:bg-[#F15A24] hover:text-white'
+                : 'bg-white text-[#F15A24] border-[#F15A24] hover:bg-[#F15A24] hover:text-white hover:shadow-orange-100'
               }`}
           >
             <HandHeart size={16} />
@@ -103,7 +98,7 @@ const Navbar = () => {
             to={isAdminLoggedIn ? "/admin/dashboard" : "/admin/login"} 
             className={`flex items-center gap-2 text-white px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 transform hover:-translate-y-0.5 shadow-md
               ${isAdminLoggedIn 
-                ? 'bg-[#1B1464] hover:bg-blue-900 hover:shadow-blue-200' 
+                ? 'bg-[#0A0A44] hover:bg-blue-900 hover:shadow-blue-200' 
                 : 'bg-gray-800 hover:bg-black hover:shadow-gray-300'}`}
           >
             {isAdminLoggedIn ? <LayoutDashboard size={16} /> : <User size={16} />}
@@ -114,7 +109,7 @@ const Navbar = () => {
         {/* --- MOBILE TOGGLE --- */}
         <button 
           onClick={() => setIsOpen(!isOpen)}
-          className="lg:hidden p-2 text-[#1B1464] hover:bg-gray-100 rounded-lg transition-colors"
+          className="lg:hidden p-2 text-[#0A0A44] hover:bg-gray-100 rounded-lg transition-colors"
         >
           {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
@@ -136,7 +131,7 @@ const Navbar = () => {
                 }`}
             >
               {link.name}
-              {isActive(link.path) && <Heart size={16} className="fill-[#006B3F]" />}
+              {isActive(link.path) && <Heart size={16} className="fill-[#006B3F] text-[#006B3F]" />}
             </Link>
           ))}
 
@@ -160,8 +155,8 @@ const Navbar = () => {
           {/* Tombol Admin Dinamis (Mobile) */}
           <Link 
             to={isAdminLoggedIn ? "/admin/dashboard" : "/admin/login"} 
-            className={`flex items-center justify-center gap-2 text-white px-4 py-3 rounded-xl font-bold active:scale-95 transition-transform
-              ${isAdminLoggedIn ? 'bg-[#1B1464]' : 'bg-gray-800'}`}
+            className={`flex items-center justify-center gap-2 text-white px-4 py-3.5 rounded-xl font-bold active:scale-95 transition-transform
+              ${isAdminLoggedIn ? 'bg-[#0A0A44]' : 'bg-gray-800'}`}
           >
             {isAdminLoggedIn ? <LayoutDashboard size={18} /> : <User size={18} />}
             {isAdminLoggedIn ? "Dashboard Admin" : "Login Admin"}

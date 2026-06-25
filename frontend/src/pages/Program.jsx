@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom'; // Pastikan Link diimport
+import { Link } from 'react-router-dom';
 import { Heart, BookOpen, Trophy, Filter, Video, ArrowRight } from 'lucide-react';
+import { mockGetPrograms } from '../data/mockData';
 
 const Program = () => {
   const [activeCategory, setActiveCategory] = useState('Semua');
@@ -19,7 +19,7 @@ const Program = () => {
   useEffect(() => {
     const fetchPrograms = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/programs');
+        const response = await mockGetPrograms();
         setPrograms(response.data);
       } catch (error) {
         console.error("Gagal menarik data program", error);
@@ -43,16 +43,19 @@ const Program = () => {
   };
 
   return (
-    <div className="flex flex-col w-full bg-[#F9FAFB] min-h-screen">
+    <div className="flex flex-col w-full bg-[#F9FAFB] min-h-screen font-sans">
       
       {/* HERO SECTION */}
-      <section className="relative w-full py-24 flex items-center bg-gradient-to-br from-[#1B1464] to-[#006B3F] overflow-hidden">
-        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[400px] h-[400px] bg-[#FBB03B]/20 rounded-full blur-[100px]"></div>
+      <section className="relative w-full py-24 flex items-center bg-gradient-to-br from-[#0A0A44] to-[#006B3F] overflow-hidden">
+        {/* Glowing Decorative Orbs */}
+        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[500px] h-[500px] bg-[#FBB03B]/10 rounded-full blur-[120px] animate-pulse"></div>
+        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[400px] h-[400px] bg-[#F15A24]/10 rounded-full blur-[100px] animate-pulse delay-700"></div>
+        
         <div className="container mx-auto px-6 md:px-12 relative z-10 text-center">
-          <h1 className="text-4xl md:text-6xl font-black text-white leading-tight tracking-tighter mb-4">
+          <h1 className="text-4xl md:text-6xl font-black text-white leading-tight tracking-tight mb-4 uppercase">
             Galeri <span className="text-[#FBB03B]">Program</span>
           </h1>
-          <p className="text-lg text-white/80 max-w-2xl mx-auto font-medium">Kumpulan dokumentasi kegiatan dan program terbaru dari Yayasan Zamoa.</p>
+          <p className="text-lg text-white/80 max-w-2xl mx-auto font-bold uppercase tracking-wider text-xs">Kumpulan dokumentasi kegiatan dan program terbaru dari Yayasan Zamoa.</p>
         </div>
       </section>
 
@@ -61,25 +64,31 @@ const Program = () => {
         <div className="container mx-auto px-6">
           
           {/* FILTER */}
-          <div className="bg-white rounded-2xl shadow-xl p-4 mb-16 max-w-4xl mx-auto flex flex-wrap justify-center gap-3 border border-gray-100">
+          <div className="glass-card rounded-[2rem] p-4 mb-16 max-w-4xl mx-auto flex flex-wrap justify-center gap-3 border border-white/50 shadow-xl">
              {categories.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 ${activeCategory === cat ? 'bg-[#1B1464] text-white shadow-lg' : 'bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-[#1B1464]'}`}
+                  className={`px-6 py-3 rounded-xl font-bold transition-all duration-300 flex items-center gap-2 transform active:scale-95
+                    ${activeCategory === cat 
+                      ? 'bg-[#0A0A44] text-white shadow-lg shadow-blue-900/20' 
+                      : 'bg-white/60 text-gray-500 hover:bg-[#0A0A44] hover:text-white hover:shadow-md'}`}
                 >
-                  {cat === 'Semua' && <Filter size={18} />} {cat}
+                  {cat === 'Semua' && <Filter size={16} />} 
+                  {cat}
                 </button>
              ))}
           </div>
 
           {/* LOADING STATE */}
           {isLoading ? (
-            <div className="text-center py-20 text-gray-500 font-bold animate-pulse">Memuat data program...</div>
+            <div className="flex flex-col items-center justify-center py-20 gap-4">
+              <div className="w-12 h-12 border-4 border-[#0A0A44] border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-gray-500 font-bold tracking-wide">Memuat data program...</p>
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredPrograms.map((program) => (
-                // Ubah Div Card menjadi Link agar bisa diklik seluruhnya
                 <Link 
                   to={`/program/${program.id}`} 
                   key={program.id} 
@@ -88,32 +97,33 @@ const Program = () => {
                   
                   {/* MEDIA AREA */}
                   <div className="relative h-64 bg-gray-100 overflow-hidden">
-                    {/* Jika YouTube, tampilkan thumbnail statis atau iframe (iframe di list view bisa berat, lebih baik gambar placeholder jika ada, tapi iframe oke) */}
                     {program.youtube_url ? (
-                      <div className="w-full h-full pointer-events-none"> {/* pointer-events-none agar klik mengarah ke halaman detail, bukan play video */}
+                      <div className="w-full h-full pointer-events-none relative">
                         <iframe 
-                          className="w-full h-full"
-                          src={`https://www.youtube.com/embed/${getYoutubeId(program.youtube_url)}?controls=0&showinfo=0`} 
+                          className="w-full h-full object-cover"
+                          src={`https://www.youtube.com/embed/${getYoutubeId(program.youtube_url)}?controls=0&showinfo=0&rel=0&modestbranding=1`} 
                           title={program.title}
                           tabIndex="-1"
                         ></iframe>
+                        {/* Overlay to ensure clicks trigger navigation, not video play */}
+                        <div className="absolute inset-0 bg-transparent"></div>
                       </div>
                     ) : (
                       <img 
-                        src={program.image_url ? `http://localhost:5000${program.image_url}` : 'https://via.placeholder.com/800x600?text=Yayasan+Zamoa'} 
+                        src={program.image_url || 'https://via.placeholder.com/800x600?text=Yayasan+Zamoa'} 
                         alt={program.title} 
-                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                       />
                     )}
                     
                     {/* Badge Kategori */}
                     <div className="absolute top-4 left-4 z-20 flex gap-2">
-                      <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold text-white bg-[#1B1464]/90 backdrop-blur-md shadow-lg">
+                      <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold text-white bg-[#0A0A44]/90 backdrop-blur-md shadow-lg">
                         {getCategoryIcon(program.category)} {program.category}
                       </span>
                       {program.youtube_url && (
-                         <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold text-white bg-red-600/90 backdrop-blur-md shadow-lg">
-                           <Video size={14}/> Video
+                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-white bg-red-600/90 backdrop-blur-md shadow-lg">
+                           <Video size={13}/> Video
                          </span>
                       )}
                     </div>
@@ -121,10 +131,10 @@ const Program = () => {
 
                   {/* CAPTION AREA */}
                   <div className="p-8 flex-1 flex flex-col">
-                    <h3 className="text-xl font-black text-[#1B1464] mb-3 leading-tight group-hover:text-[#F15A24] transition-colors">
+                    <h3 className="text-xl font-black text-[#0A0A44] mb-3 leading-tight group-hover:text-[#F15A24] transition-colors line-clamp-2">
                       {program.title}
                     </h3>
-                    <p className="text-gray-600 font-medium mb-4 line-clamp-3 text-sm leading-relaxed">
+                    <p className="text-gray-500 font-medium mb-4 line-clamp-3 text-sm leading-relaxed">
                       {program.caption}
                     </p>
                     
@@ -144,7 +154,7 @@ const Program = () => {
           )}
           
           {!isLoading && filteredPrograms.length === 0 && (
-            <div className="text-center py-20 text-gray-400 font-medium">Belum ada postingan di kategori ini.</div>
+            <div className="text-center py-20 text-gray-400 font-semibold">Belum ada postingan di kategori ini.</div>
           )}
 
         </div>
